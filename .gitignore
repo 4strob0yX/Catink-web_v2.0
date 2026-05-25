@@ -1,0 +1,3 @@
+# Configuración con credenciales (no subir al repo)
+data/config.php
+data/config.prod.php

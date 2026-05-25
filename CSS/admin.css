@@ -1,0 +1,1458 @@
+/*
+  Archivo: admin.css
+  Propósito: Estilos exclusivos del panel de administración
+  Estrategia:
+  - Todo vive bajo body.has-sidebar
+  - No rompe estilos públicos
+  - Corrige márgenes, layout y formularios
+*/
+/* desplazar contenido y footer cuando la sidebar está presente */
+body.has-sidebar .site-main {
+  margin-left: var(--sidebar-width);
+  padding: 16px;
+  transition: margin-left 0.3s ease;
+}
+body.has-sidebar .site-main .container {
+  max-width: none;
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+body.has-sidebar .container {
+  max-width: none;
+  margin: 0;
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+body.has-sidebar .site-footer {
+  margin-left: var(--sidebar-width);
+  transition: margin-left 0.3s ease;
+}
+button a {
+  text-decoration: none;
+  color: #EF3363;
+}
+h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 24px;
+    align-items: center;
+}
+hr {
+  border: none;
+  height: 4px;
+  background-color: var(--accent);
+}
+.titulos {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  margin-top: 18px;
+  align-items: center;
+}
+/* Diseño de la Siderbar de noticias */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100dvh;
+  background: var(--card-bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+  }
+  .sidebar.active {
+    transform: translateX(0);
+  }
+  body.has-sidebar .site-main,
+  body.has-sidebar .site-footer {
+    margin-left: 0;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .btn-group {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .btn-group .btn {
+    width: 100%;
+    margin-left: 0;
+  }
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Form components responsiveness */
+  .checkbox-group {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .check {
+    width: 100%;
+    margin: 5px 0;
+    padding: 10px;
+    background: rgba(0,0,0,0.03);
+    border-radius: 6px;
+    display: block; /* Ensure full width click area */
+  }
+  /* Cropper adjustments */
+  .cropper-wrapper {
+    height: 300px;
+  }
+  .crop-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .crop-actions .btn, 
+  .crop-actions button {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  /* Preview grid */
+  .preview {
+    justify-content: center;
+  }
+  .preview-item {
+    width: 45%;
+  }
+  /* Quill Editor Toolbar */
+  .ql-toolbar.ql-snow .ql-formats {
+    margin-right: 5px;
+  }
+}
+
+/* estilo provisional dentro del editor para bloques sociales */
+.ql-editor .social-embed {
+  border: 1px dashed var(--border);
+  padding: 8px;
+  background: var(--card-bg);
+  text-align: center;
+}
+.ql-editor .social-embed a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+/* ============================
+   Estilos para Calendario (Contenidos)
+   ============================ */
+.calendar-days {
+  background: var(--bg);
+  display: flex;
+  gap: 24px;
+  overflow-x: auto;
+  padding-bottom: 16px; /* espacio para scrollbar */
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch; /* smooth scroll iOS */
+}
+.day-column {
+  min-width: 300px;
+  flex: 0 0 200px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  scroll-snap-align: start;
+  padding: 16px;
+}
+.day-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 10px;
+  background: var(--bg);
+  font-weight: 700;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  margin-bottom: 16px;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,.3);
+}
+.day-news {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1;
+}
+.noticias-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  background: var(--card-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 15px rgba(0,0,0,.3);
+  transition: transform .2s ease;
+  width: 100%;
+}
+.noticias-card:hover {
+    transform: translateY(-4px);
+}
+.noticias-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.noticias-card h6 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin: 0;
+  color: var(--text);
+  line-height: 1.4;
+  padding: 10px 12px 0;
+}
+.noticias-card small {
+    padding: 0 12px;
+    display: block;
+    margin-bottom: 8px;
+}
+.noticias-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  padding: 10px 12px;
+}
+.noticias-actions .btn {
+  padding: 4px 8px;
+  font-size: 0.85rem;
+}
+.botonesSemana {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+h4 {
+  padding: 12px 12px;
+}
+/* Ajustes Mobile específicos para Calendario */
+@media (max-width: 768px) {
+  .day-column {
+    min-width: 85vw; /* Casi pantalla completa en móvil */
+  }
+  /* Ajuste de filtros en admin.php si no usan grid estándar */
+  .card-filter .row {
+    flex-direction: column;
+  }
+  /* Ajuste de contenedor de imagen en crear.php */
+  .cropper-container img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+.sidebar-menu {
+  list-style: none;
+  padding: 8px;
+  margin: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+}
+.sidebar-menu-item {
+  margin-bottom: 4px;
+}
+.sidebar-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+.sidebar-menu-link:hover {
+  background: rgba(0,0,0,0.04);
+}
+.sidebar-menu hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 8px 0;
+}
+.sidebar > div:last-child {
+  padding: 12px;
+  border-top: 1px solid var(--border);
+}
+.sidebar .logotipo {
+  padding: 16px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.sidebar .logotipo img {
+  max-width: 75%;
+  height: auto;
+  border-radius: 55%;
+}
+#user {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--border);
+}
+#user h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.sidebar-footer {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  border-top: 1px solid var(--border);
+}
+.btn-icon {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  padding: 8px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-icon:hover {
+  background: rgba(0,0,0,0.05);
+}
+/* formato de formulario */
+.title {
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+/* Estilos para el contenedor principal de formularios admin */
+.admin-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 16px;
+  width: 100%;
+}
+.form-card {
+    background: transparent;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,.08);
+}
+@media (max-width: 768px) {
+  .form-card {
+    padding: 16px;
+  }
+  .admin-container {
+    padding: 0 12px;
+  }
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
+}
+@media (min-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.form-column {
+    display: flex;
+    flex-direction: column;
+    overflow: visible;
+}
+.form-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+.form-actions .btn-success {
+    min-width: 220px;
+    font-size: 16px;
+}
+label {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+input, textarea {
+    padding: 10px;
+    border-radius: 5px;
+    background: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+input:focus, textarea:focus {
+    outline: none;
+    border-color: #007bff;
+}
+span {
+    font-size: 10px;
+    color: var(--muted);
+}
+.btn-success {
+    margin-top: 20px;
+    padding: 12px;
+    background: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.btn-success:hover {
+    background: #218838;
+}
+.btn-delete {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid #25303d;
+    background: var(--bg);
+    color: #ff0000;
+    cursor: pointer;
+}
+.btn-delete:hover {
+    background: #5a6268;
+}
+.btn-edit {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid #25303d;
+    background: var(--bg);
+    cursor: pointer;
+    color: var(--text);
+}
+.btn-edit:hover {
+    background: #5a6268;
+}
+.btn-view {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid #25303d;
+    background: var(--bg);
+    cursor: pointer;
+    color: var(--text)
+}
+.btn-view:hover {
+    background: #5a6268;
+}
+.checkbox-group{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+}
+.check {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    margin: 10px;
+}
+/* estilos para vista previa de imágenes */
+.preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 15px;
+}
+.preview-item {
+    width: 130px;
+    text-align: center;
+    font-size: 12px;
+}
+.preview-item img {
+    width: 100%;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+/* estilos para vista previa de imagen destacada */
+.featured-preview {
+    margin-top: 15px;
+    max-width: 100%;
+}
+.featured-preview img {
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+.btn-secondary {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid #25303d;
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+}
+.btn-calendar {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid #000000;
+    background: #161530;
+    color: #ffffff;
+    cursor: pointer;
+}
+.btn-secondary:hover {
+    background: #5a6268;
+}
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+.btn-danger {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid #25303d;
+    background: var(--bg);
+    color: #ff0000;
+    cursor: pointer;
+}
+.btn-danger:hover {
+    background: #5a6268;
+}
+.crop-controls {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+.crop-controls button {
+    padding: 6px 12px;
+    border-radius: 5px;
+    border: none;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+}
+.crop-controls button:hover {
+    background: #0056b3;
+}
+/* estilos para vista previa de video */
+.video-preview {
+    margin-top: 15px;
+}
+.video-preview iframe,
+.video-preview video {
+    width: 100%;
+    height: 250px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+.error {
+    color: red;
+    font-size: 14px;
+}
+/* estilos para párrafos dinámicos */
+.parrafo-item {
+    margin-top: 15px;
+}
+.parrafo-item textarea {
+    width: 100%;
+    resize: vertical;
+}
+/* estilos para select */
+.select-group {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+}
+.select-admin {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background: #fff;
+    font-size: 14px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' fill='%23666' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 10l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 18px;
+}
+.select-admin:focus {
+    outline: none;
+    border-color: #007bff;
+}
+/* ===============================
+   AISLAMIENTO TOTAL DE CROPPER
+   =============================== */
+.cropper-wrapper {
+    width: 100%;
+    height: 360px;
+    margin-top: 10px;
+    position: relative;
+    background: #111;
+    border-radius: 8px;
+}
+#featuredImagePreview {
+    display: block;
+    max-width: 100%;
+}
+/* opcional: solo visual */
+.cropper-crop-box {
+    border: 2px dashed #00c3ff;
+    background: rgba(0,195,255,0.05);
+}
+/* ===============================
+   FORMULARIO ADMIN — UNA COLUMNA
+   =============================== */
+.form-card {
+    max-width: 900px;
+    margin: 0 auto;
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+}
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+.form-group textarea {
+    resize: vertical;
+}
+/* Placeholders visuales (temporales) */
+.image-editor-placeholder,
+.editor-placeholder,
+.schedule-placeholder {
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 25px;
+    background: rgba(0,0,0,0.02);
+    text-align: center;
+    color: var(--muted);
+}
+.image-editor-placeholder p,
+.editor-placeholder p,
+.schedule-placeholder p {
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+/* Ajuste del botón */
+.form-actions {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+}
+/* ===============================
+   IMAGE CROP EDITOR
+   =============================== */
+body.has-sidebar .cropper-container {
+  height: 360px !important;
+}
+.form-group .cropper-container {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 400px;
+  overflow: hidden;
+}
+.cropper-container img {
+    max-width: 100%;
+}
+.cropper-container-editor img {
+  max-width: 100%;
+  display: block;
+}
+.aspect-ratio-controls {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
+    flex-wrap: wrap;
+}
+.aspect-ratio-controls button {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    cursor: pointer;
+}
+.crop-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
+.cropped-preview {
+    margin-top: 20px;
+}
+.preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+}
+.preview-grid img {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+}
+/* ===============================
+   EDITOR DE CONTENIDO
+   =============================== */
+/* FUENTES */
+select .ql-font {
+    width: 120px;
+    background: #30383f;
+    color: #ffffff;
+
+}
+.editor-toolbar .ql-picker.ql-font .ql-picker-item[data-value="arial"] {
+  font-family: Arial, sans-serif;
+}
+.editor-toolbar .ql-picker.ql-font .ql-picker-item[data-value="times"] {
+  font-family: "Times New Roman", serif;
+}
+.editor-toolbar .ql-picker.ql-font .ql-picker-item[data-value="roboto"] {
+  font-family: Roboto, sans-serif;
+}
+.editor-toolbar .ql-picker.ql-font .ql-picker-item[data-value="courier"] {
+  font-family: "Courier New", monospace;
+}
+/* SELECT CERRADO */
+.editor-toolbar .ql-picker.ql-lineheight .ql-picker-label {
+  min-width: 50px;
+  height: 24px;
+  padding: 6px 28px 6px 10px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  color: var(--text);
+}
+/* TEXTO DEL LABEL (valor seleccionado) */
+.editor-toolbar .ql-picker.ql-lineheight .ql-picker-label::before {
+  content: attr(data-value);
+  font-size: 14px;
+  color: #111111;
+}
+/* PLACEHOLDER CUANDO NO HAY VALOR */
+.editor-toolbar
+.ql-picker.ql-lineheight
+.ql-picker-label:not([data-value])::before {
+  content: "Interlineado";
+  opacity: 0.7;
+}
+/* DROPDOWN */
+.editor-toolbar .ql-picker.ql-lineheight .ql-picker-options {
+  min-width: 50px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+/* TEXTO DE LAS OPCIONES */
+.editor-toolbar .ql-picker.ql-lineheight .ql-picker-item::before {
+  content: attr(data-value);
+  font-size: 14px;
+  color: #111111;
+}
+/* EDITOR */
+.editor-content {
+  min-height: 300px;
+  background: var(--bg, #fff);
+  color: var(--text, #fff);
+  font-size: 14px;
+}
+/* TOOLBAR */
+.editor-toolbar {
+  border-radius: 6px 6px 0 0;
+  overflow: visible !important;
+  position: relative !important;
+  padding: 6px;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.editor-toolbar select,
+.editor-toolbar button {
+  min-height: 32px;
+  cursor: pointer;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  margin: 2px;
+}
+/* IMÁGENES */
+.ql-editor img {
+  max-width: 100%;
+  height: auto;
+}
+/* VIDEO */
+.ql-editor iframe {
+  width: 100%;
+  min-height: 300px;
+}
+/* Hover */
+.editor-toolbar button:hover {
+  background: var(--accent-soft);
+  transform: translateY(-1px);
+}
+/* Activo */
+.editor-toolbar button.ql-active {
+  background: var(--accent);
+  color: #fff;
+}
+/* Selectores (font, size, color) */
+.editor-toolbar .ql-picker {
+  border-radius: 6px;
+}
+/* ===============================
+   QUILL SELECTS — FONDO UNICO
+   =============================== */
+/* Label (lo que se ve cerrado) */
+.editor-toolbar .ql-picker-label {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px 8px;
+}
+/* Flecha */
+.editor-toolbar .ql-picker-label::before {
+  color: #111111 !important;
+}
+/* Dropdown */
+.editor-toolbar .ql-picker-options {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+  z-index: 9999;
+}
+/* Opciones */
+.editor-toolbar .ql-picker-item {
+  color: #111111 !important;
+  padding: 6px 10px;
+}
+/* ==================================================
+   SISTEMA RESPONSIVE ADMIN
+   telefono(<=578) | telefono grande(<=768) | tableta(<=980)
+   laptop(<=1200) | monitor(<=1400) | monitor grande(>1400)
+   ================================================== */
+/* monitor grande (>1400px) */
+@media (min-width: 1401px) {
+  :root {
+    --sidebar-width: 260px;
+  }
+  body.has-sidebar .container {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+  .admin-container,
+  .form-card {
+    max-width: 1100px;
+  }
+}
+/* monitor (<=1400px) */
+@media (max-width: 1400px) {
+  :root {
+    --sidebar-width: 240px;
+  }
+  .admin-container,
+  .form-card {
+    max-width: 1000px;
+  }
+}
+/* laptop (<=1200px) */
+@media (max-width: 1200px) {
+  :root {
+    --sidebar-width: 220px;
+  }
+  body.has-sidebar .container {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+  .admin-container,
+  .form-card {
+    max-width: 920px;
+  }
+  .preview-item {
+    width: 120px;
+  }
+}
+/* tableta (<=980px) */
+@media (max-width: 980px) {
+  :root {
+    --sidebar-width: 200px;
+  }
+  body.has-sidebar .site-main {
+    padding: 12px;
+  }
+  body.has-sidebar .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  .admin-container,
+  .form-card {
+    max-width: 100%;
+  }
+  .form-grid {
+    gap: 16px;
+  }
+  .preview-item {
+    width: 45%;
+  }
+}
+/* telefono grande (<=768px) */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 220px;
+  }
+  body.has-sidebar .site-main {
+    padding: 10px;
+  }
+  h1,
+  .titulos {
+    font-size: 1.45rem;
+    margin-bottom: 16px;
+  }
+  .sidebar-menu-link {
+    font-size: 0.92rem;
+  }
+}
+/* telefono (<=578px) */
+@media (max-width: 578px) {
+  body.has-sidebar .site-main {
+    padding: 8px;
+  }
+  body.has-sidebar .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  .admin-container {
+    padding: 0 8px;
+  }
+  .form-card {
+    padding: 14px;
+  }
+  .preview-item {
+    width: 100%;
+  }
+  .cropper-wrapper {
+    height: 260px;
+  }
+  .day-column {
+    min-width: 92vw;
+  }
+}
+/* Hover */
+.editor-toolbar .ql-picker-item:hover {
+  background: #f0f0f0 !important;
+}
+/* Seleccionado */
+.editor-toolbar .ql-picker-item.ql-selected {
+  background: #007bff !important;
+  color: #ffffff !important;
+}
+/* ===============================
+   QUILL TOOLBAR — SIEMPRE BLANCO
+   =============================== */
+/* Toolbar completa */
+.editor-toolbar {
+  background: #ffffff !important;
+  border: 1px solid #dcdcdc !important;
+  color: #111111 !important;
+}
+/* Botones */
+.editor-toolbar button {
+   background: #ffffff !important;
+  color: #111111 !important;
+  border: 2px solid #cfcfcf !important;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s ease, box-shadow .15s ease;
+}
+/* Hover botones */
+.editor-toolbar button:hover {
+  background: #f2f2f2 !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
+/* Botón activo */
+.editor-toolbar button.ql-active {
+  background: #007bff !important;
+  color: #ffffff !important;
+  border-color: #007bff !important;
+  box-shadow: 0 2px 6px rgba(0,123,255,.35);
+}
+/* Selects (pickers) */
+.editor-toolbar .ql-picker-label {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border: 1px solid #dcdcdc !important;
+}
+/* Flecha del select */
+.editor-toolbar .ql-picker-label::before {
+  color: #111111 !important;
+}
+/* Dropdown */
+.editor-toolbar .ql-picker-options {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border: 1px solid #dcdcdc !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,.15);
+}
+/* Opciones */
+.editor-toolbar .ql-picker-item {
+  color: #111111 !important;
+}
+/* Hover opciones */
+.editor-toolbar .ql-picker-item:hover {
+  background: #f0f0f0 !important;
+}
+/* Seleccionado */
+.editor-toolbar .ql-picker-item.ql-selected {
+  background: #007bff !important;
+  color: #ffffff !important;
+}
+.editor-toolbar .ql-formats {
+  margin-right: 6px;
+  padding-right: 6px;
+  border-right: 1px solid #e5e5e5;
+}
+/* ===============================
+   PROGRAMACIÓN DE PUBLICACIÓN
+   =============================== */
+#programacionBox {
+    margin-top: 10px;
+}
+select, input[type="datetime-local"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--text);
+}
+/* ===============================
+   MODAL RECORTE EDITOR
+   =============================== */
+.crop-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+}
+.crop-modal[style*="flex"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+.crop-modal-content {
+    background: var(--card-bg);
+    padding: 20px;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 12px;
+}
+.cropper-container-editor {
+    max-height: 400px;
+    overflow: hidden;
+}
+.crop-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    justify-content: flex-end;
+}
+/* Cards */
+.img-card {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+}
+.img-card-left{
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.card-img-top {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.card {
+    margin-bottom: 8px;
+    margin-top: 8px;
+    padding: 12px;
+}
+.card-filter {
+  height: 124px;
+  background: var(--card-bg); 
+  border: 1px solid var(--border); 
+  border-radius: 8px; 
+  overflow: hidden; 
+  box-shadow: 0 6px 18px rgba(11,11,11,0.04);
+  margin-bottom: 15px;
+}
+.card-footer span {
+  display: flex;
+  align-items: space-between;
+  gap: 6px;
+}
+.news-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #0b1220;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 100%;
+}
+.news-tags {
+  display: flex;
+  flex-wrap: wrap; /* permite salto de línea */
+  gap: 6px;        /* separación entre tags */
+}
+/* ===============================
+   ESTILOS TABLA DE NOTICIAS
+================================ */
+/* Tabla general */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    align-items: center;
+}
+/* Encabezado */
+.table thead th {
+    background-color: #343a40;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: 600;
+    border-bottom: 2px solid #495057;
+}
+/* Filas */
+.table tbody tr:hover {
+    transition: 0.3s;
+    align-items: center;
+}
+/* Celdas */
+.table td {
+    vertical-align: middle;
+    padding: 0.75rem 0.5rem;
+    align-items: center;
+}
+/* Imagen miniatura */
+.table img {
+    border-radius: 5px;
+    border: 1px solid #dee2e6;
+}
+/* Botones de acciones */
+.btn-group .btn {
+    margin-left: 2px;
+    transition: 0.2s;
+}
+/* ===============================
+   RESPONSIVIDAD (MOBILE)
+   =============================== */
+@media (max-width: 768px) {
+    /* Ajuste layout principal */
+    body.has-sidebar .site-main {
+        margin-left: 0;
+    }
+    body.has-sidebar .site-footer {
+        margin-left: 0;
+    }
+    body.has-sidebar .container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    /* Sidebar off-canvas */
+    .sidebar {
+        transform: translateX(-100%);
+        box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    /* Tablas responsivas */
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* Formularios y Grid */
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    .form-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .form-actions .btn {
+        width: 100%;
+    }
+    /* Preview Grid */
+    .preview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    /* Botones de tabla en vertical o compactos */
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    .btn-group .btn {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+/* Crop publicitario */
+.crop-container {
+    max-width: 600px;
+    margin-top: 10px;
+}
+.crop-buttons {
+    margin: 10px 0;
+}
+.crop-buttons button {
+    padding: 8px 15px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+/* Estilos de tarjeta de publicidad */
+.publicidad-card {
+    margin: 10px;
+    width: 300px;
+}
+.btn-delete-publicidad {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid #25303d;
+    background: var(--bg);
+    color: #ff0000;
+    cursor: pointer;
+}
+.btn-delete-publicidad:hover {
+    background: #5a6268;
+}
+.btn-delete-usuario {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border-radius: 5px;
+    border: 1px solid #25303d;
+    background: var(--bg);
+    color: #ff0000;
+    cursor: pointer;
+}
+.btn-delete-usuario:hover {
+    background: #5a6268;
+}
+/* Modals */
+.modal {
+    display: none; /* oculto por defecto */
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+.modal-content {
+    background-color: var(--bg);
+    padding: 20px;
+    border-radius: 6px;
+    width: 400px;
+    max-width: 90%;
+    position: relative;
+}
+.modal-close {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+}
+/* formulario de usuarios area de permisos */
+.row-permisos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* centra cards si no llenan el row */
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.col-permiso {
+    flex: 1 1 220px; /* mínimo ancho, se adapta */
+    max-width: 300px; /* ancho máximo de cada card */
+}
+/* 1 card en móvil */
+@media (max-width: 576px) {
+    .col-permiso {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
+}
+/* 2 cards en tablets pequeñas */
+@media (min-width: 577px) and (max-width: 768px) {
+    .col-permiso {
+        flex: 1 1 45%;
+        max-width: 45%;
+    }
+}
+/* 3 cards en pantallas medianas */
+@media (min-width: 769px) and (max-width: 1199px) {
+    .col-permiso {
+        flex: 1 1 30%;
+        max-width: 30%;
+    }
+}
+/* 4 cards en pantallas grandes */
+@media (min-width: 1200px) {
+    .col-permiso {
+        flex: 1 1 22%;
+        max-width: 22%;
+    }
+}
+/* Fondo del modal */
+.modal-nativo {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.5);
+}
+/* Contenido */
+.modal-content-nativo {
+    background-color: var(--card-bg);
+    margin: 10% auto; 
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.modal-content-nativo-special {
+    background-color: var(--card-bg);
+    margin: 10% auto; 
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+/* Header */
+.modal-header-nativo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+/* Botón cerrar */
+.cerrar {
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+/* ===== Mejoras globales mobile admin ===== */
+body.sidebar-open {
+  overflow: hidden;
+}
+.sidebar-backdrop {
+  display: none;
+}
+@media (max-width: 768px) {
+  .sidebar-toggle-mobile {
+    position: sticky;
+    top: 10px;
+    left: 0;
+    z-index: 1050;
+    width: max-content;
+    background: var(--card-bg);
+  }
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+    z-index: 99;
+  }
+  .sidebar-backdrop.active {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  body.has-sidebar .site-main,
+  body.has-sidebar .site-main .container,
+  body.has-sidebar .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  .d-flex.justify-content-between.align-items-center {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.5rem;
+  }
+  .card {
+    overflow: hidden;
+  }
+  .table {
+    min-width: 640px;
+    font-size: 0.9rem;
+  }
+  .table td,
+  .table th {
+    white-space: nowrap;
+  }
+  .btn,
+  .btn-success,
+  .btn-secondary,
+  .btn-delete,
+  .btn-delete-publicidad,
+  .btn-delete-usuario {
+    min-height: 38px;
+  }
+  .crop-modal-content,
+  .modal-content,
+  .modal-content-nativo,
+  .modal-content-nativo-special {
+    width: calc(100% - 1rem);
+    margin: 1rem auto;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+  }
+  .ql-editor iframe,
+  .video-preview iframe,
+  .video-preview video {
+    min-height: 200px;
+    height: 200px;
+  }
+}

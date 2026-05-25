@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="CatInk News" company="Cat Ink" webLink="https://www.catink.com.mx/" view-date="2026-03-24" view-index="0" gantt-divider-location="272" resource-divider-location="300" version="3.3.3322" locale="es_ES">
+    <description><![CDATA[Desarrollo de la pagina web de la empresa, que se encarga en la difucion de contenido de temas varios.]]></description>
+    <view zooming-state="default:3" id="gantt-chart">
+        <field id="tpd3" name="Nombre" width="162" order="0"/>
+        <field id="tpd4" name="Fecha de inicio" width="43" order="1"/>
+        <field id="tpd5" name="Fecha de fin" width="51" order="2"/>
+        <field id="tpd15" name="Notas" width="20" order="3"/>
+        <option id="taskLabelUp" value="advancement"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+        <option id="color.recent"><![CDATA[#ff9999]]></option>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Nombre" width="210" order="0"/>
+        <field id="1" name="Función" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="0" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="0" uid="a97cf15e6ef145f096d11375bc8cfb98" name="Proyecto CatInk_News" color="#ff9999" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2026-01-08" duration="102" complete="100" thirdDate="2026-01-08" thirdDate-constraint="1" priority="4" expand="true">
+            <task id="20" uid="2fec537aed5144459dac8dc0cc7dbb9b" name="Fase 1: Analisis y Diseño (Obj 1 y 4)" meeting="false" start="2026-01-08" duration="11" complete="100" expand="false">
+                <task id="1" uid="f81c6c96b5aa4a9595e35a54cb09a45a" name="Diseño Inicial" meeting="false" start="2026-01-08" duration="4" complete="100" expand="true">
+                    <notes><![CDATA[Se explico los requerimiento visuales de la página web, junto a que se esperaba ver para los usuarios comunes, animaciones, anuncios, que fuese responsivo]]></notes>
+                </task>
+                <task id="2" uid="82605598fe8d48f79d5e6e25dc3dc253" name="Mejora Diseño y Diseño Admin" meeting="false" start="2026-01-12" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Se dio revisión, existiendo una retroalimentación, correcion de algunos apectos visuales, y se explico que se requeria dentro del panel administrativo]]></notes>
+                </task>
+            </task>
+            <task id="21" uid="7170a5b842484e6a8e8a463db458ff9c" name="Fase 2: Desarrollo del sistema (Obj 2, 3 y 5)" meeting="false" start="2026-01-19" duration="56" complete="100" expand="false">
+                <task id="3" uid="8dab47eb6ae54f7e8fb1581a54683312" name="Formulario de noticas" meeting="false" start="2026-01-19" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Se presento la primera version del pane administrativo, junto con el primer diseño del crud de noticias, se obtuvo retoalimentacion, cambios en el diseño, e implementacion de nuevas ideas del cliente para satisfacer sus necesidades]]></notes>
+                </task>
+                <task id="4" uid="93dda2314e3e4f17bcc57615867b43ab" name="Mejora formulario, adicion de likes, views y timepos" meeting="false" start="2026-01-26" duration="8" complete="100" expand="true">
+                    <notes><![CDATA[Se implementaron las mejoras solicitadas por el cliente, el cliente solicito añadir funciones que permitieran llevar un control de las vistas, los likes y tiempo de retencion de los usuario al entrar en una noticia, a su vez la graficacion de estas mismas por categoria.
+Como propuesta futura se incluira la implementación de la localizacion de los usuarios]]></notes>
+                </task>
+                <task id="5" uid="c47b1a16ec694aacba80468b708e9104" name="Formulario Categorias, Publicidad" meeting="false" start="2026-02-03" duration="6" complete="100" expand="true">
+                    <notes><![CDATA[Implementacion de crud de categoria, por si se requieren agregar, modificar o eliminar categorias de la pagina, adicional, se solicito la implementacion de un crud para publicidad, la cual se monitorizara, con los click, tiempo de visualizacion y ubicacion de los usuarios, para posteriormente graficar y valorar el alcance de las noticias]]></notes>
+                </task>
+                <task id="6" uid="93fc9e031d2945cc86359e4dc99168ee" name="Formulario Usuarios" meeting="false" start="2026-02-09" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Se implemetara el crud de usuarios, los cuales tendran niveles de acceso, hacia los distintos cruds, se mejorara la implementacion de la publicidad para mostrarla a corde a la sona donde se ubica el usuario, agregar funcion que detecte en la base de datos el numero de clicks, para que automaticamente se desactive al llegar a cierto numero y la preparacion para la entrega de correos electronicos con confirmacion de suscripcion, recomendaciones y anuncios pagados]]></notes>
+                </task>
+                <task id="7" uid="539877b78f5542c8b7d04893320505af" name="Formulario Correos y mejoras visuales" meeting="false" start="2026-02-16" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Solicito la creacion de otra categoria, en la cual se puedan crear correos y programarlos para enviar, dichos correos se enfocaran a la publicidad interna de la empresa, como tambien publicidad pagada.
+Solicito hacer pruebas en distintos formatos de imagen para ver su presentacion dentro del correo.
+Dentro del entorno comercial, solicito cambios visuales entre los que destacan, editar textos (tamaños, colores y presentación), agregar iconos en algunos titulos y cambiar algunos otros.
+Agregar funcion para mostrar videos como cards, en los cuales si es posible ejecutar los videos, en caso contrario que redirija al video y a la aplicación si es desde movil.
+En la presentacion de la card, marcar el tiempo en horas de hace cuanto se publico, al superar las 24 hrs, que diga ayer, y despues coloque la fecha, como tambien presentar quien es el autor y que esto sea de menor tamaño.]]></notes>
+                </task>
+                <task id="8" uid="96c44b0143e44e78832850872189126f" name="Correcciones visuales y ajustes finales" meeting="false" start="2026-02-23" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Tras la revison del proyecto el jefe dio luz verde a la implementacion del sistema la proxima semana, no sin antes dar correcciones finales para implementarlo perfectamente:
+- Desde la nota, poder precionar botones que redirijan para compartir automáticamente.
+- En el apartado de publicidad, el tiempo de visualizacion no tiene que se el total sino que sea el tiempo promedio de visualización por usuario.
+- Agregar las paginas nosotros, únete a nuestro equipo, términos y condiciones, y contáctanos.
+- En la correos cambiar la alineación a la izquierda, asi como tambien la alineacion de algunos titulos.
+- Corregir algunos errores visuales al estar en móvil.]]></notes>
+                </task>
+                <task id="9" uid="f6473606d37d4b68b89c95602b9968d1" name="Correcciones visuales" meeting="false" start="2026-03-02" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Reducir margenes en movil en el apartado de noticias
+Cambiar formato del banner de los cookies
+Acomodar la distribucion en movil, para que sea mas adecuado en el apartado de administracion
+Añadir un botón que redirecciones a la pagina principal en administacion
+Hacer mas pequeño el logo de catink en movil
+Adaptar los url para que reconosca los de compartir en tiktok
+Cambiar los estilos de la linea de desplazamiento 
+Hacer mas pequeño el baner cuadrado
+Crear pagina error 404
+Y hacer la implementacion]]></notes>
+                </task>
+                <task id="22" uid="13b2cee337b8419888a0c504e0440c23" name="Correcciones finales de desarrollo" meeting="false" start="2026-03-09" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Centrar textos en carrucel web
+Hacer mas pequeño el sidebar
+En el sidebar agregar iconos
+Cambiar en el apartado de permisos, que todos puedan ver las estadisticas
+Editar el boton de compartido
+Editar los link de la pagina para que redireccione a las web oficiales
+Agragar recomendaciones al final de las noticias
+Corregir el diseño del resumen de noticias en home - admin
+En el banner (movil), reducir el sobreado lateral, que solo exista en la parte inferior
+Checar la disposicion en movil, ya que al estar en horizontal se visualiza de manera extraña
+Agregar el enbebido en el editor Quill]]></notes>
+                </task>
+            </task>
+            <task id="23" uid="2477155c849942a7b8d44e8a50cc87c2" name="Fase 3: Pruebas y Mejoras (Obj 6)" meeting="false" start="2026-03-02" duration="28" complete="100" expand="false">
+                <task id="10" uid="64069afed9ad45a893b508b208b9994c" name="Implementación" meeting="false" start="2026-03-02" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Realizar la implementacion del proyecto en linea]]></notes>
+                </task>
+                <task id="24" uid="140a5b3e52a3459cbd946176520479a2" name="Pruebas y Correcciones" meeting="false" start="2026-03-09" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Corregir algunos redireccionamientos]]></notes>
+                </task>
+                <task id="25" uid="46770ff371c145d79fa7188b5a5688ff" name="Validacion y Optimizacion" meeting="false" start="2026-03-16" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[Cambiar titulo de "Últimas Publicaciones de la Semana" a "Top Publicaciones de la Semana".
+Reducir el margen en los apartados "Recomendados para ti" y "Noticias mas recientes".
+En la paginacion de las categorias, aumentar el numero de noticias visibles por pagina.
+Comenzar la implementacion de Google AdSenses
+Añadir el contenido en "nosotros", "terminos y condiciones" y "aviso de privacidad"
+Que se pueda entrar desde cualquier parte de la card a la noticia 
+Los tags redireccione las categorías 
+Ocultar el icono de inicio de sección 
+El carrusel adaptarlo en tamaños más grandes 
+Aumentar el tamaño de los textos de los recomendados e iconos
+Checar todos los posibles iconos
+En la barra de compartir colocar el título de compartir 
+Acomodar las gráficas  
+Tratar que sea más fácil hacer los recortes en el formulario de noticias
+El icono en el buscador y los títulos]]></notes>
+                </task>
+                <task id="26" uid="8754fb7b10174eed9d792830b5127753" name="Ajustes visuales" meeting="false" start="2026-03-23" duration="7" complete="100" expand="true">
+                    <notes><![CDATA[- Footer, meterle margin top.
+- Al final de la página meter los recomendados y lo más nuevo.
+- Que en los links, solo cambie de color, no sé subrayé.
+- En la card lateral, hacer que sean como pequeñas cards.
+- En los correos agregar un footer con los avisos de privacidad, términos y condiciones y un botón para desuscribirse.
+- Mejorar el apartado de búsqueda.
+- En el buscador de Google,  ver cómo añadir el submenú del dominio.
+- Mejorar el formulario de noticias para que sea mas intuitivo.
+- Corregir el visual de lo más nuevo y lo mas popular.
+- Arreglar bug.]]></notes>
+                </task>
+            </task>
+            <task id="11" uid="3a46947b673f48e4b344fd21083b682c" name="Fase 4: Documentacion (Obj 7)" meeting="false" start="2026-02-05" duration="74" complete="100" expand="true">
+                <task id="12" uid="febb7dd7d150479b973877669ecf7733" name="Primer entrega" meeting="false" start="2026-02-05" duration="6" complete="100" expand="true"/>
+                <task id="19" uid="1eb6b37b0e9245bda39b30fc4b043f85" name="Enterga fina" meeting="false" start="2026-02-11" duration="68" complete="100" expand="true"/>
+            </task>
+        </task>
+    </tasks>
+    <resources/>
+    <allocations/>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>

@@ -1,0 +1,391 @@
+# 1) Estructura y función de archivos — CatInk_Proyecto
+
+## Resumen de arquitectura
+- Stack principal: PHP + MySQL (mysqli), frontend con CSS/JS propios.
+- Patrón general: `views/` (pantallas), `controllers/` (acciones/CRUD/APIs), 
+                  `layout/` (frames), `data/` (conexión y dumps), `api/` (endpoints JSON),
+                  `img/` (assets), `PHPMailer/` (librería externa).
+
+## Árbol de directorios (hasta 2 niveles)
+```text
+.
+├─ CSS/ (4 archivos)
+├─ PHPMailer/ (8 archivos)
+├─ PHPMailer/language/ (55 archivos)
+├─ PHPMailer/src/ (7 archivos)
+├─ api/ (1 archivos)
+├─ controllers/ (36 archivos)
+├─ data/ (2 archivos)
+├─ img/ (13 archivos)
+├─ img/correo/ (4 archivos)
+├─ img/noticias/ (108 archivos)
+├─ img/publicidad/ (5 archivos)
+├─ layout/ (4 archivos)
+├─ views/ (32 archivos)
+├─ views/email/ (9 archivos)
+├─ views/helpers/ (6 archivos)
+```
+
+### Rol de cada zona
+- **Entry point público**: `index.php` (home y agregación de contenido).
+- **Presentación**: `views/` + `layout/` + `CSS/`.
+- **Lógica de negocio / acciones**: `controllers/`.
+- **Datos**: `data/conexion.php` + dumps SQL (`cat_ink.sql`, `data/cat_ink.sql`).
+- **Endpoints JSON**: `api/` y algunos controladores con `Content-Type: application/json`.
+- **Integración de correo**: `views/email/` + librería `PHPMailer/`.
+- **Assets**: `img/` (branding, noticias, publicidad, correos).
+
+---
+
+## 2) Módulo Core (arranque, configuración y base)
+
+### Archivos
+- `index.php`: Home pública. Consulta noticias, sidebar, recomendadas, publicidad activa y videos.
+- `data/conexion.php`: Conexión MySQLi y charset UTF-8.
+- `layout/header.php` / `layout/footer.php`: Estructura base del front, menú, scripts y buscador.
+- `404.html`: Página de error personalizada.
+- `robots.txt`: Directiva simple para bots.
+
+### Flujo crítico: Home pública
+1. `index.php` incluye `header.php` y `conexion.php`.
+2. Ejecuta consultas SQL para noticias/categorías/publicidad/videos.
+3. Ordena y segmenta resultados en bloques (slider, top, recientes, populares).
+4. Renderiza HTML con URLs amigables (helpers de URL).
+5. `footer.php` carga JS global (`CSS/scripts.js`) y utilidades (cookies, búsqueda).
+
+---
+
+## 3) Módulo de autenticación y autorización (ACL)
+
+### Archivos
+- `controllers/logincontroller.php`: Login, validación de contraseña, carga ACL en sesión.
+- `controllers/logoutcontroller.php`: Cierre de sesión y limpieza de cookie.
+- `controllers/aclcontroller.php`: Función `proteger(modulo, accion)` para bloquear accesos.
+- `views/helpers/helper.php`: Mapeo de permisos bitmask y utilidades ACL.
+- `views/helpers/acl.php`: Carga ACL del módulo actual.
+- `layout/headerAdmin.php`: Gate de sesión y ACL para vistas del panel.
+- `views/login.php`: Formulario de acceso.
+
+### Flujo crítico: acceso al panel admin
+1. Usuario envía credenciales en `views/login.php`.
+2. `logincontroller.php` consulta usuario y valida password.
+3. Si es válido, mapea permisos por módulo (`helper.php`) y guarda en `$_SESSION['ACL']`.
+4. Al entrar a una vista admin, `headerAdmin.php` + `acl.php` validan sesión y permiso de lectura.
+5. Para acciones CRUD, cada controller llama `proteger(modulo, accion)` antes de ejecutar lógica.
+
+---
+
+## 4) Módulo Noticias (CMS principal)
+
+### Vistas
+- `views/contenidos.php`: Agenda/listado semanal de noticias en admin.
+- `views/crear.php`: Alta de noticia.
+- `views/editar.php`: Edición de noticia.
+- `views/news.php`: Detalle público de noticia.
+- `views/newsAdmin.php`: Vista administrativa de detalle/estadísticas.
+- `views/categoria.php`: Listado por categoría o búsqueda.
+- `views/see.php`: Visualización pública alternativa.
+
+### Controladores
+- `controllers/noticiascontroller.php`: Crear noticia.
+- `controllers/actualizar_noticia.php`: Actualizar noticia.
+- `controllers/eliminar_noticia.php`: Eliminar noticia y crops.
+- `controllers/sumarvistas.php`: Incrementar vistas agregadas.
+- `controllers/guardartiempo.php`: Guardar tiempo de lectura.
+- `controllers/like.php`: Registrar like por IP.
+- `controllers/obtener_estadisticas.php`: Métricas por noticia.
+- `controllers/obtener_likes.php`: Serie temporal de likes.
+
+### Flujo crítico: publicar noticia
+1. Admin llena `views/crear.php` (título, descripción, contenido, categorías, crops).
+2. Form envía a `controllers/noticiascontroller.php`.
+3. Controller valida ACL (`noticias/crear`) y datos obligatorios.
+4. Convierte base64 a webp para `crop1/crop2/crop3` y guarda en `img/noticias/`.
+5. Inserta noticia en tabla `noticias` y relaciones en `noticia_categoria`.
+6. Redirige a listado o detalle admin.
+
+### Flujo crítico: consumo de noticia en público
+1. Usuario llega a `views/news.php` por hash o id.
+2. Se consulta noticia + autor + categorías (si fecha_publicacion <= NOW()).
+3. Front dispara endpoints de engagement:
+   - `sumarvistas.php` (contador global).
+   - `guardartiempo.php` (lectura efectiva).
+   - `like.php` (reacción por IP única).
+4. Admin consume agregados en `obtener_estadisticas.php` / `obtener_likes.php`.
+
+---
+
+## 5) Módulo Categorías
+
+### Archivos
+- `views/cats.php`: Gestión admin de categorías.
+- `controllers/crearc.php`: Crear categoría.
+- `controllers/editarc.php`: Editar categoría.
+- `controllers/eliminarc.php`: Eliminar categoría + pivote `noticia_categoria`.
+
+### Flujo
+1. Vista admin carga lista y total de noticias por categoría.
+2. CRUD vía AJAX/form a controllers.
+3. Controllers validan ACL y unicidad de nombre.
+4. Cambios impactan navegación pública (`layout/header.php`) y filtros en `views/categoria.php`.
+
+---
+
+## 6) Módulo Publicidad (campañas + analítica)
+
+### Vistas
+- `views/publicidad.php`: Gestión de campañas.
+- `views/crearp.php`: Alta de publicidad.
+- `views/editarp.php`: Edición de publicidad.
+- `views/verp.php`: Detalle de campaña.
+
+### Controladores
+- `controllers/guardar_publicidad.php`: Crear campaña y guardar imagen.
+- `controllers/editar_publicidad.php`: Editar campaña.
+- `controllers/eliminarp.php`: Eliminar campaña + assets + pivote.
+- `controllers/publicidad_view.php`: Registrar vista de anuncio.
+- `controllers/publicidad_click.php`: Registrar click en anuncio.
+- `controllers/obtener_views_pub.php`: Métricas de vistas/tiempo.
+- `controllers/obtener_clicks_pub.php`: Métricas de clics.
+
+### Flujo crítico: ciclo de campaña publicitaria
+1. Admin crea campaña (`crearp.php`) con tipo (banner/cuadro), fechas, URL, categorías e imagen.
+2. `guardar_publicidad.php` valida ACL, procesa imagen webp y persiste `publicidad` + `publicidad_categoria`.
+3. `index.php` selecciona campañas activas por tipo y fecha para mostrar en home.
+4. Front reporta impresiones (`publicidad_view.php`) y clics (`publicidad_click.php`).
+5. Panel consulta series en `obtener_views_pub.php` y `obtener_clicks_pub.php`.
+
+---
+
+## 7) Módulo Suscripciones y Correos
+
+### Suscripciones
+- `views/suscripcion.php`: Formulario público.
+- `controllers/suscribirse.php`: Alta de suscriptor con geodatos.
+- `views/suscripciones.php`: Panel de suscriptores / programación.
+- `controllers/actualizarcorreos.php`: Actualizar hora/estado de programación.
+- `views/email/unsubscribe.php`: Baja manual por email.
+
+### Correos publicitarios
+- `views/correos.php`: Listado de correos publicitarios.
+- `views/correo_pub.php` / `views/correo_pub_edit.php`: Crear/editar piezas.
+- `controllers/crearCorreoPub.php` / `editCorreoPub.php` / `eliminarCorreoPub.php`.
+- `img/correo/`: Assets para plantillas de correo.
+
+### Envío de emails
+- `views/email/contacto.php`, `correo.php`, `correoPublicidad.php`, `solicitud.php`, `diarias.html`.
+- `PHPMailer/`: librería SMTP usada para envío.
+
+### Flujo crítico: alta de suscriptor + baja
+1. Usuario envía formulario en `suscripcion.php`.
+2. `suscribirse.php` valida campos y persiste en `suscripciones` (IP/pais/estado cuando aplica).
+3. Panel usa `suscripciones.php` para monitoreo y automatización de correos.
+4. Usuario puede darse de baja desde `views/email/unsubscribe.php`.
+
+---
+
+## 8) Módulo Usuarios y administración interna
+
+### Archivos
+- `views/usuarios.php`: Listado de usuarios.
+- `views/crearu.php`: Alta de usuario.
+- `views/editaru.php`: Edición de usuario.
+- `views/veru.php`: Vista de detalle.
+- `controllers/altausuarios.php`, `editarusuario.php`, `eliminarusuario.php`, `validar_usuario.php`.
+
+### Flujo crítico: alta de usuario con permisos
+1. Admin completa formulario en `crearu.php`.
+2. `altausuarios.php` valida datos y duplicados.
+3. Convierte checkboxes a bitmask por módulo (crear/leer/editar/eliminar).
+4. Guarda usuario y permisos en tabla `usuarios`.
+5. En login, esos permisos se mapean a ACL operativa de sesión.
+
+---
+
+## 9) Módulo Videos y embeds
+
+### Archivos
+- `views/videos.php`: Gestión de videos embebidos.
+- `controllers/crearv.php`, `editarv.php`, `eliminarv.php`.
+- `views/helpers/videoEmbed.php`: Normaliza URLs (YouTube/TikTok/Facebook) a embebidos.
+- `views/helpers/socialEmbed.php`: Integración de embeds sociales.
+
+### Flujo
+1. Admin registra URL de video.
+2. Home y detalle de noticia consumen URLs activas.
+3. Helpers convierten URL externa a formato iframe seguro/renderizable.
+
+---
+
+## 10) Módulo páginas institucionales y legales
+
+### Archivos
+- `views/nosotros.php`, `views/privacidad.php`, `views/terminos.php`, `views/politica-cookies.php`, `views/contactanos.php`, `views/unete.php`.
+- `views/paginas.php` + `controllers/pagina.php`: edición de contenido institucional desde DB.
+
+### Flujo
+1. Contenido se sirve como vista estática o texto editable desde tabla `paginas`.
+2. Admin actualiza bloques institucionales por `pagina.php`.
+
+---
+
+## 11) Módulo API y utilidades de navegación
+
+### Archivos
+- `api/search.php`: Búsqueda/autocomplete de noticias (JSON).
+- `views/helpers/urlhelper.php`: Construcción de URLs amigables (news, categoría, búsqueda).
+- `views/sitemap.php`: Generación/listado de rutas indexables.
+
+### Flujo
+1. Front invoca `api/search.php` al escribir en búsqueda.
+2. Endpoint devuelve título + imagen + URL.
+3. Navegación utiliza rutas amigables generadas por `urlhelper.php`.
+
+---
+
+## 12) Estructura de datos (SQL)
+
+### Archivos
+- `cat_ink.sql`: Dump histórico.
+- `data/cat_ink.sql`: Dump más reciente de estructura en producción.
+
+### Tablas clave (núcleo)
+- **Contenido**: `noticias`, `categorias`, `noticia_categoria`.
+- **Engagement**: `noticias_stats`, `noticia_likes`.
+- **Publicidad**: `publicidad`, `publicidad_categoria`, `publicidad_views`, `publicidad_clicks`.
+- **Usuarios**: `usuarios`.
+- **Marketing**: `suscripciones`, `correos_publicitarios`, `programacion_correos`.
+- **Sistema**: `paginas`, `secciones`, `videos`.
+
+---
+
+## 13) Assets y convenciones
+
+- `img/noticias/`: crops webp por noticia con patrón `noticia_{id}_crop{n}_{timestamp}.webp`.
+- `img/publicidad/`: creatividades de campañas (`pub_{id}_{timestamp}.webp`).
+- `img/correo/`: imágenes para plantillas de email marketing.
+- `img/` raíz: branding, logos y recursos estáticos del sitio.
+
+---
+
+## 14) Inventario por módulo (rápido)
+
+### Front público
+- `index.php`, `layout/header.php`, `layout/footer.php`, `CSS/styles.css`, `CSS/scripts.js`.
+
+### Panel admin
+- `layout/headerAdmin.php`, `layout/footerAdmin.php`, `CSS/admin.css`, `CSS/admin.js`, `views/admin.php`.
+
+### Controladores por dominio
+- Noticias: `noticiascontroller.php`, `actualizar_noticia.php`, `eliminar_noticia.php`, `sumarvistas.php`, `guardartiempo.php`, `like.php`.
+- Publicidad: `guardar_publicidad.php`, `editar_publicidad.php`, `eliminarp.php`, `publicidad_view.php`, `publicidad_click.php`.
+- Usuarios: `altausuarios.php`, `editarusuario.php`, `eliminarusuario.php`, `validar_usuario.php`.
+- Categorías: `crearc.php`, `editarc.php`, `eliminarc.php`.
+- Videos: `crearv.php`, `editarv.php`, `eliminarv.php`.
+- Correos/suscripciones: `suscribirse.php`, `actualizarcorreos.php`, `crearCorreoPub.php`, `editCorreoPub.php`, `eliminarCorreoPub.php`.
+- Estadísticas: `obtener_estadisticas.php`, `obtener_likes.php`, `obtener_estadisticas_globales.php`, `obtener_estadisticas_likes.php`, `obtener_views_pub.php`, `obtener_clicks_pub.php`.
+
+### Integraciones
+- Mailer: `PHPMailer/` + `views/email/*`.
+- Búsqueda: `api/search.php`.
+
+---
+
+## 15) Recomendación de lectura (onboarding)
+
+1. `data/cat_ink.sql` (modelo de datos).
+2. `layout/header.php` y `index.php` (flujo público principal).
+3. `controllers/logincontroller.php` + `controllers/aclcontroller.php` + `layout/headerAdmin.php` (seguridad/ACL).
+4. CRUD de noticias y publicidad (núcleo de negocio).
+5. Endpoints de estadísticas (observabilidad).
+
+Con esto puedes entender el proyecto primero por **módulos**, y después bajar a cada archivo.
+
+---
+
+## 16) Manual corto: cómo agregar un módulo nuevo
+
+Este checklist está pensado para que un módulo nuevo quede integrado en front, admin, ACL, rutas y BD.
+
+### 16.1 Definir alcance del módulo
+Antes de crear archivos, define:
+1. **Objeto de negocio** (ej. “podcasts”, “eventos”, “encuestas”).
+2. **CRUD necesario** (crear, leer, editar, eliminar).
+3. **Si tendrá parte pública, admin o ambas**.
+4. **Métricas requeridas** (vistas, clics, tiempo, conversiones).
+
+### 16.2 Archivos que normalmente debes crear/modificar
+
+#### A) Capa de datos (obligatorio)
+- **Crear tablas nuevas** en `data/cat_ink.sql` (y reflejar en `cat_ink.sql` si conservan ambos dumps).
+- Definir claves foráneas e índices (siguiendo patrón de `noticia_categoria`, `publicidad_categoria`, etc.).
+- Si aplica relación N:N, crear tabla pivote `{modulo}_{entidad}`.
+
+#### B) Controladores (lógica)
+En `controllers/`:
+- `crear{modulo}.php`
+- `editar{modulo}.php`
+- `eliminar{modulo}.php`
+- (Opcional) `obtener_estadisticas_{modulo}.php` para series temporales.
+
+Todos deben:
+1. Incluir `aclcontroller.php`.
+2. Llamar `proteger('{modulo}','accion')`.
+3. Validar entradas.
+4. Persistir con consultas preparadas.
+5. Responder JSON o redirección consistente con el módulo.
+
+#### C) Vistas públicas/admin
+En `views/`:
+- `{modulo}.php` (listado admin).
+- `crear{modulo}.php` / `editar{modulo}.php` / `ver{modulo}.php` según necesidad.
+- Si hay cara pública, crear vista pública equivalente (detalle/listado).
+
+#### D) Navegación/layout
+- Editar `layout/headerAdmin.php` para incluir acceso al módulo en menú lateral admin.
+- Si hay frontend público, integrar acceso en `layout/header.php` o en bloques de `index.php`.
+
+#### E) ACL y permisos (crítico)
+- En BD (`usuarios`) agregar columna de permisos bitmask `perm_{modulo}` (si el esquema usa columnas por módulo).
+- En `views/helpers/helper.php`:
+  - Agregar módulo en `mapearPermisos()`.
+  - Agregar módulo en `getModulosACL()`.
+  - Agregar vista en `primerModuloLectura()`.
+- En el mapeo de `layout/headerAdmin.php`, registrar `'vista' => 'modulo'`.
+
+#### F) Frontend estático (si aplica)
+- Si hay UI propia, agregar estilos en `CSS/admin.css` o `CSS/styles.css`.
+- Agregar comportamiento en `CSS/admin.js` o `CSS/scripts.js`.
+- Si usará recursos, crear carpeta en `img/{modulo}/` y definir convención de nombres.
+
+#### G) API/Búsqueda (opcional)
+- Si el módulo se busca en vivo, crear endpoint en `api/` (patrón `api/search.php`).
+- Si requiere sitemap/SEO, actualizar `views/sitemap.php` y helper de URLs.
+
+### 16.3 Cambios mínimos de base de datos (plantilla)
+
+Si el módulo es gestionable por ACL y tendrá analítica básica, normalmente se mueve esto:
+1. **Tabla principal**: `{modulo}`.
+2. **Tabla pivote** (si aplica): `{modulo}_categoria` o similar.
+3. **Tabla de métricas** (si aplica): `{modulo}_stats`, `{modulo}_views`, `{modulo}_clicks`.
+4. **Permisos en usuarios**: columna `perm_{modulo}` (bitmask 1/2/4/8).
+5. **Datos de seed/config**: registros iniciales en `secciones`/`paginas` si el módulo se controla por visibilidad.
+
+### 16.4 Flujo recomendado de implementación
+1. Diseñar tablas y relaciones en SQL.
+2. Implementar controladores CRUD + ACL.
+3. Crear vistas admin.
+4. Integrar menú admin y permisos.
+5. Exponer parte pública (si aplica).
+6. Añadir métricas/endpoints.
+7. Ajustar CSS/JS.
+8. Documentar módulo en este archivo (sección por módulo + flujo crítico).
+
+### 16.5 Checklist de “no romper” al agregar módulo
+- [ ] El usuario con permiso `leer` ve el módulo en admin.
+- [ ] El usuario sin permiso no puede acceder por URL directa.
+- [ ] Crear/editar/eliminar respetan `proteger()`.
+- [ ] FK e índices están activos en BD.
+- [ ] Las consultas del home no fallan por joins nuevos.
+- [ ] Si hay assets, se guardan y eliminan correctamente del filesystem.
+- [ ] El módulo quedó documentado en `docs/estructura_proyecto.md`.

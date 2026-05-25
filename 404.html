@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - CatInk News</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+body{
+    min-height:100vh;
+    background: radial-gradient(circle at center,#0f0c29,#1a1a40,#000);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    padding:20px;
+}
+/* GRID GAMER */
+body::before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background-size:40px 40px;
+    animation:gridMove 8s linear infinite;
+}
+@keyframes gridMove{
+    from{transform:translateY(0);}
+    to{transform:translateY(40px);}
+}
+
+.container{
+    text-align:center;
+    z-index:2;
+    max-width:600px;
+    width:100%;
+}
+
+/* 404 */
+.error{
+    font-size:clamp(60px, 11vw, 120px);
+    font-weight:700;
+    text-shadow:0 0 15px #00ffff, 0 0 30px #00ffff;
+    animation:flicker 3s infinite;
+}
+
+@keyframes flicker{
+    0%,18%,22%,25%,53%,57%,100%{opacity:1;}
+    20%,24%,55%{opacity:0.4;}
+}
+
+.message{
+    font-size:clamp(16px, 3vw, 22px);
+    margin-bottom:30px;
+    text-shadow:0 0 15px #00ffff, 0 0 30px #00ffff;
+    animation:flicker 3s infinite;
+}
+
+/* Mancha tinta */
+.ink-bg{
+    position:absolute;
+    width:0;
+    height:0;
+    background:black;
+    border-radius:50%;
+    animation:spread 2s ease-out forwards;
+    z-index:1;
+}
+@keyframes spread{
+    to{
+        width:1400px;
+        height:1400px;
+        margin-left:-700px;
+        margin-top:-700px;
+        opacity:0.3;
+    }
+}
+/* ===== GATO SVG ===== */
+.cat-wrapper{
+    width:clamp(200px, 50vw, 320px);
+    margin-top: 30px;
+    margin-left:auto;
+    margin-right:auto;
+    margin-bottom: 10px;
+}
+
+.cat-svg{
+    width:100%;
+    animation:floatCat 3s ease-in-out infinite;
+}
+
+@keyframes floatCat{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-12px);}
+    100%{transform:translateY(0);}
+}
+
+.cat-fill{
+    fill:#5a0071;
+    stroke:#111;
+    stroke-width:6;
+}
+.cat-fill-dark{
+    fill:#000000;
+    stroke-width:6;
+}
+.eye{
+    fill:black;
+    stroke:#111;
+    stroke-width:4;
+}
+
+.pupil{
+    fill: white;
+    transition:transform 0.08s linear;
+    stroke: #000;
+    stroke-width:2;
+}
+
+.mouth{
+    fill:black;
+}
+
+.logo-letter{
+    font-size:120px;
+    font-weight:bold;
+    fill:#FFD54F;
+    font-family:Arial, sans-serif;
+}
+
+/* Cola */
+.tail{
+    transform-origin:360px 450px;
+    animation:wag 2s ease-in-out infinite;
+}
+@keyframes wag{
+    0%{transform:rotate(10deg);}
+    50%{transform:rotate(-15deg);}
+    100%{transform:rotate(10deg);}
+}
+
+/* BOTÓN */
+.btn{
+    margin-top:35px;
+    padding:12px 30px;
+    border:none;
+    border-radius:30px;
+    background:#00ffff;
+    color:black;
+    font-weight:bold;
+    cursor:pointer;
+    box-shadow:0 0 20px #00ffff;
+    transition:0.3s;
+    opacity:0;
+    transform:scale(0.5);
+    font-size:clamp(14px,2.5vw,16px);
+}
+.btn:hover{
+    background:white;
+    box-shadow:0 0 30px white;
+}
+.show{
+    opacity:1;
+    transform:scale(1);
+}
+
+/* SPLASH */
+.splash{
+    position:absolute;
+    width:15px;
+    height:15px;
+    background:black;
+    border-radius:50%;
+    pointer-events:none;
+    animation:splashAnim 800ms ease-out forwards;
+}
+@keyframes splashAnim{
+    to{
+        transform:translate(var(--x), var(--y)) scale(0.3);
+        opacity:0;
+    }
+}
+
+/* Partículas */
+.particle{
+    position:absolute;
+    width:4px;
+    height:4px;
+    background:#00ffff;
+    border-radius:50%;
+    animation:floatParticle 6s linear infinite;
+}
+@keyframes floatParticle{
+    from{transform:translateY(0);}
+    to{transform:translateY(-800px);}
+}
+.tail-ink{
+    fill: none;
+    stroke: #5a0071;
+    stroke-width: 22;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transform-origin:380px 450px;
+    animation:inkWag 3s ease-in-out infinite;
+}
+@keyframes inkWag{
+    0%{transform:rotate(5deg);}
+    50%{transform:rotate(-8deg);}
+    100%{transform:rotate(5deg);}
+}
+</style>
+</head>
+<body>
+
+<div class="ink-bg"></div>
+<div class="container">
+    <div class="error">404</div>
+    <div class="message">Oops... Parece que esta página se perdió en la tinta <i class="bi bi-heartbreak-fill"></i></div>
+    <div class="cat-wrapper">
+        <svg class="cat-svg" viewBox="0 0 500 600">
+            <g transform="translate(12.5, 15) scale(0.85)">
+                <!-- Cola -->
+                <path class="tail-ink"
+                    d="M380 450 
+                        C400 400, 420 320, 380 260
+                        C360 230, 390 200, 420 220"/>
+                <!-- Patas traseras (atrás) -->
+                <ellipse cx="150" cy="530" rx="60" ry="40" class="cat-fill"/>
+                <ellipse cx="350" cy="530" rx="60" ry="40" class="cat-fill"/>
+                <!-- Dedos patas traseras -->
+                <line x1="100" y1="520" x2="100" y2="550" stroke="#111" stroke-width="4"/>
+                <line x1="125" y1="510" x2="125" y2="570" stroke="#111" stroke-width="4"/>
+
+                <line x1="375" y1="510" x2="375" y2="570" stroke="#111" stroke-width="4"/>
+                <line x1="400" y1="520" x2="400" y2="550" stroke="#111" stroke-width="4"/>
+                <!-- Orejas -->
+                <polygon points="95,180 90,20 180,85" class="cat-fill"/>
+                <polygon points="320,85 410,20 405,180" class="cat-fill"/>
+                <polygon points="118,150 110,65 157,105" class="cat-fill-dark"/>
+                <polygon points="343,105 390,65 382,150" class="cat-fill-dark"/>
+                <!-- Cuerpo (delante de patas traseras) -->
+                <ellipse cx="250" cy="420" rx="120" ry="150" class="cat-fill"/>
+                <text x="250" y="450" text-anchor="middle" class="logo-letter">C</text>
+                <circle cx="250" cy="230" r="160" class="cat-fill"/>
+                <!-- Ojos -->
+                <ellipse cx="200" cy="220" rx="50" ry="65" class="eye"/>
+                <ellipse cx="300" cy="220" rx="50" ry="65" class="eye"/>
+                <!-- Pupilas que se mueven -->
+                <circle cx="200" cy="220" r="35" class="pupil" id="pupilLeft"/>
+                <circle cx="300" cy="220" r="35" class="pupil" id="pupilRight"/>
+                <!-- Boca estilo :3 -->
+                <path d="
+                M150 280           
+                Q200 340 250 300 
+                Q300 340 350 280 
+                Q250 465 150 280
+                Z" class="mouth"/>
+                <ellipse cx="250" cy="290" rx="20" ry="10" fill="#ffdce0"/>
+                <ellipse cx="250" cy="358" rx="20" ry="10" fill="#dc2a74"/>
+                <!-- Patas delanteras (delante del cuerpo) -->
+                <ellipse cx="190" cy="560" rx="60" ry="40" class="cat-fill"/>
+                <ellipse cx="310" cy="560" rx="60" ry="40" class="cat-fill"/>
+                <!-- Dedos patas delanteras -->
+                <line x1="165" y1="560" x2="165" y2="600" stroke="#111" stroke-width="4"/>
+                <line x1="190" y1="535" x2="190" y2="600" stroke="#111" stroke-width="4"/>
+                <line x1="215" y1="560" x2="215" y2="600" stroke="#111" stroke-width="4"/>
+
+                <line x1="285" y1="560" x2="285" y2="600" stroke="#111" stroke-width="4"/>
+                <line x1="310" y1="535" x2="310" y2="600" stroke="#111" stroke-width="4"/>
+                <line x1="335" y1="560" x2="335" y2="600" stroke="#111" stroke-width="4"/>
+            </g>
+        </svg>
+    </div>
+    <button class="btn" id="backBtn">Volver al inicio</button>
+</div>
+<script>
+const btn = document.getElementById("backBtn");
+const pupils = [
+    document.getElementById("pupilLeft"),
+    document.getElementById("pupilRight")
+];
+
+const eyeCenters = [
+    {x:200,y:220},
+    {x:300,y:220}
+];
+
+document.addEventListener("mousemove", e => {
+    pupils.forEach((pupil,index)=>{
+        const rect = document.querySelector(".cat-svg").getBoundingClientRect();
+        const mouseX = e.clientX - rect.left;
+        const mouseY = e.clientY - rect.top;
+
+        const dx = mouseX - eyeCenters[index].x;
+        const dy = mouseY - eyeCenters[index].y;
+
+        const angle = Math.atan2(dy,dx);
+        const radius = 12;
+
+        const x = Math.cos(angle)*radius;
+        const y = Math.sin(angle)*radius;
+
+        pupil.style.transform = `translate(${x}px, ${y}px)`;
+    });
+});
+
+/* Mostrar botón */
+setTimeout(()=> btn.classList.add("show"),1500);
+
+/* Splash */
+btn.addEventListener("click",(e)=>{
+    for(let i=0;i<20;i++){
+        let splash=document.createElement("div");
+        splash.className="splash";
+        splash.style.left=e.clientX+"px";
+        splash.style.top=e.clientY+"px";
+        splash.style.setProperty("--x",(Math.random()-0.5)*200+"px");
+        splash.style.setProperty("--y",(Math.random()-0.5)*200+"px");
+        document.body.appendChild(splash);
+        setTimeout(()=> splash.remove(),800);
+    }
+
+    setTimeout(()=>{
+        if (window.history.length > 1) {
+            window.history.back();
+        } else {
+            window.location.href = "https://www.catink.com.mx/";
+        }
+    },400);
+});
+
+/* partículas */
+for(let i=0;i<30;i++){
+    let p=document.createElement("div");
+    p.className="particle";
+    p.style.left=Math.random()*100+"vw";
+    p.style.top=Math.random()*100+"vh";
+    p.style.animationDuration=(4+Math.random()*4)+"s";
+    document.body.appendChild(p);
+}
+</script>
+
+</body>
+</html>
