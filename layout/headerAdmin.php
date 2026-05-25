@@ -135,6 +135,11 @@ if (!$fila) {
                 <a href="./videos.php" class="sidebar-menu-link">Videos</a>
             </li>
         <?php endif; ?>
+        <?php if (($_SESSION['ACL']['noticias']['editar']?? false) || $superadmin): ?>
+            <li class="sidebar-menu-item">
+                <a href="./moderacion.php" class="sidebar-menu-link"><i class="bi bi-shield-check"></i> Moderación</a>
+            </li>
+        <?php endif; ?>
     </ul>
     <div class="sidebar-footer">
       <button id="themeToggle" class="btn btn-icon" title="Cambiar tema">🌙</button>

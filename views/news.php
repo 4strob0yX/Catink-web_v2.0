@@ -95,6 +95,14 @@ $stmtPopulares = $con->prepare("
 ");
 $stmtPopulares->execute();
 $populares = $stmtPopulares->get_result();
+// Obtener secciones (visibilidad de bloques)
+$secciones = [];
+$stmtSec = $con->prepare("SELECT nombre, estado FROM secciones");
+$stmtSec->execute();
+$resSec = $stmtSec->get_result();
+while ($sec = $resSec->fetch_assoc()) {
+    $secciones[$sec['nombre']] = $sec;
+}
 //Obtener banner publicidad
 $stmt = $con->prepare("SELECT * FROM publicidad WHERE activo = 1 AND tipo = 1 ORDER BY RAND() LIMIT 1");
 $stmt->execute();
@@ -150,6 +158,8 @@ $publicidadCuadro = $stmt->get_result()->fetch_assoc();
                 echo $contenido
               ?>
             </div>
+            <!-- COMENTARIOS -->
+            <?php $noticiaId = $id; include(__DIR__ . "/helpers/comentarios_component.php"); ?>
             <hr>
             <h2 align="center"><i class="bi bi-share-fill"></i> Compartir</h2>
             <div class="share-bar">
@@ -172,7 +182,7 @@ $publicidadCuadro = $stmt->get_result()->fetch_assoc();
                     <i class="bi bi-messenger"></i>
                 </a>
             </div>
-            <?php if ($secciones['publicidad']['estado'] == 1) : ?>
+            <?php if (($secciones['publicidad']['estado'] ?? 0) == 1 && $publicidad) : ?>
               <div class="ad-container">
                 <a href="<?= $publicidad['url'] ?>" class="banner-button" data-pub="<?= $publicidad['id_pub'] ?>">
                   <img src="./../<?= $publicidad['imagen'] ?>" alt="" class="banner">
@@ -186,7 +196,7 @@ $publicidadCuadro = $stmt->get_result()->fetch_assoc();
         <div class="col-md-3">
           <div class="sidebar-wrapper">
             <div class="card sidebar-card">
-              <?php if($secciones['publicidad']['estado'] == 1) : ?>
+              <?php if(($secciones['publicidad']['estado'] ?? 0) == 1 && $publicidadCuadro) : ?>
                 <div class="ad-container">
                   <a href="<?= $publicidadCuadro['url'] ?>" class="banner-button" data-pub="<?= $publicidadCuadro['id_pub'] ?>">
                     <img src="./../<?= $publicidadCuadro['imagen'] ?>" class="banner-card-img-top">
